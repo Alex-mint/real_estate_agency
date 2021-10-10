@@ -50,4 +50,4 @@ class Flat(models.Model):
     def __str__(self):
         return f'{self.town}, {self.address} ({self.price}р.)'
 
-    new_building = models.NullBooleanField(null=True, blank=True)
+    new_building = models.NullBooleanField()
