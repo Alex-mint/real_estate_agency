@@ -1,10 +1,16 @@
 from  property.models import Flat
-def sort_new_buildings():
-    new_buildings = Flat.objects.filter(construction_year__gte=2015)
-    for new_building in new_buildings:
-        new_building.new_building = True
-        new_building.save()
-    old_buildings = Flat.objects.filter(construction_year__lt=2015)
-    for old_building in old_buildings:
-        old_building.new_building = False
-        old_building.save()
+import phonenumbers
+#from property.prueba2 import get_pure_number
+#get_pure_number(1)
+
+
+def get_pure_number(num):
+    flat = Flat.objects.all()[num]
+    phone = flat.owners_phonenumber
+    parsed_phone = phonenumbers.parse(phone, "RU")
+    pure_number = phonenumbers.format_number(parsed_phone, phonenumbers.PhoneNumberFormat.E164)
+    flat.owner_pure_phone = pure_number
+    flat.save()
+
+
+
