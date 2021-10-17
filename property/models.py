@@ -20,14 +20,14 @@ class Flat(models.Model):
     town_district = models.CharField(
         'Район города, где находится квартира',
         max_length=50,
-        blank=True,
+        blank=True, db_index=True,
         help_text='Чертаново Южное')
     address = models.TextField(
-        'Адрес квартиры',
+        'Адрес квартиры', db_index=True,
         help_text='ул. Подольских курсантов д.5 кв.4')
     floor = models.CharField(
         'Этаж',
-        max_length=3,
+        max_length=3, db_index=True,
         help_text='Первый этаж, последний этаж, пятый этаж')
 
     rooms_number = models.IntegerField(
@@ -50,17 +50,19 @@ class Flat(models.Model):
     def __str__(self):
         return f'{self.town}, {self.address} ({self.price}р.)'
 
-    new_building = models.NullBooleanField(verbose_name='Новостройка')
+    new_building = models.NullBooleanField(verbose_name='Новостройка', db_index=True)
     liked_by = models.ManyToManyField(User, verbose_name='Кто лайкнул:',
-                                      related_name="liked_posts", blank=True)
+                                      related_name='liked_posts', blank=True)
 
 
 class Claim(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             related_name='user_complained',
                              verbose_name='Кто жаловался:')
     flat = models.ForeignKey(Flat, on_delete=models.CASCADE,
+                             related_name='flats_complained',
                              verbose_name='Квартира, на которую жаловались:')
-    text = models.TextField('Текст жалобы:', max_length=400)
+    text = models.TextField('Текст жалобы:', max_length=400, db_index=True)
 
     def __str__(self):
         return f'{self.user}, {self.flat} ({self.text}р.)'
